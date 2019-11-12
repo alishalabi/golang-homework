@@ -7,14 +7,14 @@ import (
 )
 
 func (h *Handler) Register(v1 *echo.Group) {
-	jwtMiddleware := middleware.JWT(utils.JWTSecret)
-	guestUsers := v1.Group("/users")
-	guestUsers.POST("", h.SignUp)
-	guestUsers.POST("/login", h.Login)
+	// jwtMiddleware := middleware.JWT(utils.JWTSecret)
+	// guestAlbums := v1.Group("/albums")
+	// guestAlbums.POST("", h.SignUp)
+	// guestUsers.POST("/login", h.Login)
 
-	user := v1.Group("/user", jwtMiddleware)
-	user.GET("", h.CurrentUser)
-	user.PUT("", h.UpdateUser)
+	album := v1.Group("/album")
+	album.GET("", h.CurrentAlbum)
+	album.PUT("", h.UpdateAlbum)
 
 	profiles := v1.Group("/profiles", jwtMiddleware)
 	profiles.GET("/:username", h.GetProfile)
