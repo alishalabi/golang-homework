@@ -55,8 +55,6 @@ type projectResponse struct {
 	TagList        []string  `json:"tagList"`
 	CreatedAt      time.Time `json:"createdAt"`
 	UpdatedAt      time.Time `json:"updatedAt"`
-	Favorited      bool      `json:"favorited"`
-	FavoritesCount int       `json:"favoritesCount"`
 	Author         struct {
 		Username  string  `json:"username"`
 		Bio       *string `json:"bio"`
@@ -86,12 +84,6 @@ func newProjectResponse(c echo.Context, a *model.Project) *singleProjectResponse
 	for _, t := range a.Tags {
 		ar.TagList = append(ar.TagList, t.Tag)
 	}
-	for _, u := range a.Favorites {
-		if u.ID == userIDFromToken(c) {
-			ar.Favorited = true
-		}
-	}
-	ar.FavoritesCount = len(a.Favorites)
 	ar.Author.Username = a.Author.Username
 	ar.Author.Image = a.Author.Image
 	ar.Author.Bio = a.Author.Bio
@@ -114,12 +106,6 @@ func newProjectListResponse(us user.Store, userID uint, projects []model.Project
 		for _, t := range a.Tags {
 			ar.TagList = append(ar.TagList, t.Tag)
 		}
-		for _, u := range a.Favorites {
-			if u.ID == userID {
-				ar.Favorited = true
-			}
-		}
-		ar.FavoritesCount = len(a.Favorites)
 		ar.Author.Username = a.Author.Username
 		ar.Author.Image = a.Author.Image
 		ar.Author.Bio = a.Author.Bio

@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"errors"
+	// "errors"
 	"net/http"
 	"strconv"
 

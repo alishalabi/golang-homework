@@ -10,9 +10,9 @@ type Project struct {
 	Title       string `gorm:"not null"`
 	Description string
 	Body        string
-	Author      User
-	AuthorID    uint
-	Tags        []Tag  `gorm:"many2many:project_tags;association_autocreate:false"`
+	Author      string
+	// AuthorID    uint
+	// Tags        []Tag  `gorm:"many2many:project_tags;association_autocreate:false"`
 }
 
 
