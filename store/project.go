@@ -171,39 +171,6 @@ func (ps *ProjectStore) ListFeed(userID uint, offset, limit int) ([]model.Projec
 	return projects, count, nil
 }
 
-func (ps *ProjectStore) AddComment(a *model.Project, c *model.Comment) error {
-	err := ps.db.Model(a).Association("Comments").Append(c).Error
-	if err != nil {
-		return err
-	}
-	return ps.db.Where(c.ID).Preload("User").First(c).Error
-}
-
-func (ps *ProjectStore) GetCommentsBySlug(slug string) ([]model.Comment, error) {
-	var m model.Project
-	if err := ps.db.Where(&model.Project{Slug: slug}).Preload("Comments").Preload("Comments.User").First(&m).Error; err != nil {
-		if gorm.IsRecordNotFoundError(err) {
-			return nil, nil
-		}
-		return nil, err
-	}
-	return m.Comments, nil
-}
-
-func (ps *ProjectStore) GetCommentByID(id uint) (*model.Comment, error) {
-	var m model.Comment
-	if err := ps.db.Where(id).First(&m).Error; err != nil {
-		if gorm.IsRecordNotFoundError(err) {
-			return nil, nil
-		}
-		return nil, err
-	}
-	return &m, nil
-}
-
-func (ps *ProjectStore) DeleteComment(c *model.Comment) error {
-	return ps.db.Delete(c).Error
-}
 
 func (ps *ProjectStore) AddFavorite(a *model.Project, userID uint) error {
 	usr := model.User{}

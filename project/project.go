@@ -16,11 +16,6 @@ type Store interface {
 	ListByWhoFavorited(username string, offset, limit int) ([]model.Project, int, error)
 	ListFeed(userID uint, offset, limit int) ([]model.Project, int, error)
 
-	AddComment(*model.Project, *model.Comment) error
-	GetCommentsBySlug(string) ([]model.Comment, error)
-	GetCommentByID(uint) (*model.Comment, error)
-	DeleteComment(*model.Comment) error
-
 	AddFavorite(*model.Project, uint) error
 	RemoveFavorite(*model.Project, uint) error
 	ListTags() ([]model.Tag, error)

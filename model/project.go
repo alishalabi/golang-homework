@@ -19,5 +19,5 @@ type Project struct {
 type Tag struct {
 	gorm.Model
 	Tag      string    `gorm:"unique_index"`
-	Articles []Article `gorm:"many2many:project_tags;"`
+	Projects []Project `gorm:"many2many:project_tags;"`
 }

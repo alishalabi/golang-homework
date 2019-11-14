@@ -151,21 +151,3 @@ func (r *projectUpdateRequest) bind(c echo.Context, a *model.Project) error {
 	a.Body = r.Project.Body
 	return nil
 }
-
-type createCommentRequest struct {
-	Comment struct {
-		Body string `json:"body" validate:"required"`
-	} `json:"comment"`
-}
-
-func (r *createCommentRequest) bind(c echo.Context, cm *model.Comment) error {
-	if err := c.Bind(r); err != nil {
-		return err
-	}
-	if err := c.Validate(r); err != nil {
-		return err
-	}
-	cm.Body = r.Comment.Body
-	cm.UserID = userIDFromToken(c)
-	return nil
-}

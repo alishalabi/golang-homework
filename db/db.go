@@ -44,7 +44,6 @@ func AutoMigrate(db *gorm.DB) {
 		&model.User{},
 		&model.Follow{},
 		&model.Project{},
-		&model.Comment{},
 		&model.Tag{},
 	)
 }

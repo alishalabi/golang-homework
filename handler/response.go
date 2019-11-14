@@ -130,58 +130,7 @@ func newProjectListResponse(us user.Store, userID uint, projects []model.Project
 	return r
 }
 
-type commentResponse struct {
-	ID        uint      `json:"id"`
-	Body      string    `json:"body"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
-	Author    struct {
-		Username  string  `json:"username"`
-		Bio       *string `json:"bio"`
-		Image     *string `json:"image"`
-		Following bool    `json:"following"`
-	} `json:"author"`
-}
 
-type singleCommentResponse struct {
-	Comment *commentResponse `json:"comment"`
-}
-
-type commentListResponse struct {
-	Comments []commentResponse `json:"comments"`
-}
-
-func newCommentResponse(c echo.Context, cm *model.Comment) *singleCommentResponse {
-	comment := new(commentResponse)
-	comment.ID = cm.ID
-	comment.Body = cm.Body
-	comment.CreatedAt = cm.CreatedAt
-	comment.UpdatedAt = cm.UpdatedAt
-	comment.Author.Username = cm.User.Username
-	comment.Author.Image = cm.User.Image
-	comment.Author.Bio = cm.User.Bio
-	comment.Author.Following = cm.User.FollowedBy(userIDFromToken(c))
-	return &singleCommentResponse{comment}
-}
-
-func newCommentListResponse(c echo.Context, comments []model.Comment) *commentListResponse {
-	r := new(commentListResponse)
-	cr := commentResponse{}
-	r.Comments = make([]commentResponse, 0)
-	for _, i := range comments {
-		cr.ID = i.ID
-		cr.Body = i.Body
-		cr.CreatedAt = i.CreatedAt
-		cr.UpdatedAt = i.UpdatedAt
-		cr.Author.Username = i.User.Username
-		cr.Author.Image = i.User.Image
-		cr.Author.Bio = i.User.Bio
-		cr.Author.Following = i.User.FollowedBy(userIDFromToken(c))
-
-		r.Comments = append(r.Comments, cr)
-	}
-	return r
-}
 
 type tagListResponse struct {
 	Tags []string `json:"tags"`

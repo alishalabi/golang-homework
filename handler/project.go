@@ -129,56 +129,6 @@ func (h *Handler) DeleteProject(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{"result": "ok"})
 }
 
-func (h *Handler) AddComment(c echo.Context) error {
-	slug := c.Param("slug")
-	a, err := h.projectStore.GetBySlug(slug)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
-	}
-	if a == nil {
-		return c.JSON(http.StatusNotFound, utils.NotFound())
-	}
-	var cm model.Comment
-	req := &createCommentRequest{}
-	if err := req.bind(c, &cm); err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, utils.NewError(err))
-	}
-	if err = h.projectStore.AddComment(a, &cm); err != nil {
-		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
-	}
-	return c.JSON(http.StatusCreated, newCommentResponse(c, &cm))
-}
-
-func (h *Handler) GetComments(c echo.Context) error {
-	slug := c.Param("slug")
-	cm, err := h.projectStore.GetCommentsBySlug(slug)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
-	}
-	return c.JSON(http.StatusOK, newCommentListResponse(c, cm))
-}
-
-func (h *Handler) DeleteComment(c echo.Context) error {
-	id64, err := strconv.ParseUint(c.Param("id"), 10, 32)
-	id := uint(id64)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, utils.NewError(err))
-	}
-	cm, err := h.projectStore.GetCommentByID(id)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
-	}
-	if cm == nil {
-		return c.JSON(http.StatusNotFound, utils.NotFound())
-	}
-	if cm.UserID != userIDFromToken(c) {
-		return c.JSON(http.StatusUnauthorized, utils.NewError(errors.New("unauthorized action")))
-	}
-	if err := h.projectStore.DeleteComment(cm); err != nil {
-		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
-	}
-	return c.JSON(http.StatusOK, map[string]interface{}{"result": "ok"})
-}
 
 func (h *Handler) Favorite(c echo.Context) error {
 	slug := c.Param("slug")
