@@ -16,7 +16,7 @@ type User struct {
 	Image      *string
 	Followers  []Follow  `gorm:"foreignkey:FollowingID"`
 	Followings []Follow  `gorm:"foreignkey:FollowerID"`
-	Favorites  []Article `gorm:"many2many:favorites;"`
+	Favorites  []Project `gorm:"many2many:favorites;"`
 }
 
 type Follow struct {

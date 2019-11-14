@@ -47,7 +47,7 @@ func newProfileResponse(us user.Store, userID uint, u *model.User) *profileRespo
 	return r
 }
 
-type articleResponse struct {
+type projectResponse struct {
 	Slug           string    `json:"slug"`
 	Title          string    `json:"title"`
 	Description    string    `json:"description"`
@@ -65,17 +65,17 @@ type articleResponse struct {
 	} `json:"author"`
 }
 
-type singleArticleResponse struct {
-	Article *articleResponse `json:"article"`
+type singleProjectResponse struct {
+	Project *projectResponse `json:"project"`
 }
 
-type articleListResponse struct {
-	Articles      []*articleResponse `json:"articles"`
-	ArticlesCount int                `json:"articlesCount"`
+type projectListResponse struct {
+	Projects      []*projectResponse `json:"projects"`
+	ProjectsCount int                `json:"projectsCount"`
 }
 
-func newArticleResponse(c echo.Context, a *model.Article) *singleArticleResponse {
-	ar := new(articleResponse)
+func newProjectResponse(c echo.Context, a *model.Project) *singleProjectResponse {
+	ar := new(projectResponse)
 	ar.TagList = make([]string, 0)
 	ar.Slug = a.Slug
 	ar.Title = a.Title
@@ -96,14 +96,14 @@ func newArticleResponse(c echo.Context, a *model.Article) *singleArticleResponse
 	ar.Author.Image = a.Author.Image
 	ar.Author.Bio = a.Author.Bio
 	ar.Author.Following = a.Author.FollowedBy(userIDFromToken(c))
-	return &singleArticleResponse{ar}
+	return &singleProjectResponse{ar}
 }
 
-func newArticleListResponse(us user.Store, userID uint, articles []model.Article, count int) *articleListResponse {
-	r := new(articleListResponse)
-	r.Articles = make([]*articleResponse, 0)
-	for _, a := range articles {
-		ar := new(articleResponse)
+func newProjectListResponse(us user.Store, userID uint, projects []model.Project, count int) *projectListResponse {
+	r := new(projectListResponse)
+	r.Projects = make([]*projectResponse, 0)
+	for _, a := range projects {
+		ar := new(projectResponse)
 		ar.TagList = make([]string, 0)
 		ar.Slug = a.Slug
 		ar.Title = a.Title
@@ -124,9 +124,9 @@ func newArticleListResponse(us user.Store, userID uint, articles []model.Article
 		ar.Author.Image = a.Author.Image
 		ar.Author.Bio = a.Author.Bio
 		ar.Author.Following, _ = us.IsFollower(a.AuthorID, userID)
-		r.Articles = append(r.Articles, ar)
+		r.Projects = append(r.Projects, ar)
 	}
-	r.ArticlesCount = count
+	r.ProjectsCount = count
 	return r
 }
 

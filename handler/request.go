@@ -95,60 +95,60 @@ func (r *userLoginRequest) bind(c echo.Context) error {
 	return nil
 }
 
-type articleCreateRequest struct {
-	Article struct {
+type projectCreateRequest struct {
+	Project struct {
 		Title       string   `json:"title" validate:"required"`
 		Description string   `json:"description" validate:"required"`
 		Body        string   `json:"body" validate:"required"`
 		Tags        []string `json:"tagList, omitempty"`
-	} `json:"article"`
+	} `json:"project"`
 }
 
-func (r *articleCreateRequest) bind(c echo.Context, a *model.Article) error {
+func (r *projectCreateRequest) bind(c echo.Context, a *model.Project) error {
 	if err := c.Bind(r); err != nil {
 		return err
 	}
 	if err := c.Validate(r); err != nil {
 		return err
 	}
-	a.Title = r.Article.Title
-	a.Slug = slug.Make(r.Article.Title)
-	a.Description = r.Article.Description
-	a.Body = r.Article.Body
-	if r.Article.Tags != nil {
-		for _, t := range r.Article.Tags {
+	a.Title = r.Project.Title
+	a.Slug = slug.Make(r.Project.Title)
+	a.Description = r.Project.Description
+	a.Body = r.Project.Body
+	if r.Project.Tags != nil {
+		for _, t := range r.Project.Tags {
 			a.Tags = append(a.Tags, model.Tag{Tag: t})
 		}
 	}
 	return nil
 }
 
-type articleUpdateRequest struct {
-	Article struct {
+type projectUpdateRequest struct {
+	Project struct {
 		Title       string   `json:"title"`
 		Description string   `json:"description"`
 		Body        string   `json:"body"`
 		Tags        []string `json:"tagList"`
-	} `json:"article"`
+	} `json:"project"`
 }
 
-func (r *articleUpdateRequest) populate(a *model.Article) {
-	r.Article.Title = a.Title
-	r.Article.Description = a.Description
-	r.Article.Body = a.Body
+func (r *projectUpdateRequest) populate(a *model.Project) {
+	r.Project.Title = a.Title
+	r.Project.Description = a.Description
+	r.Project.Body = a.Body
 }
 
-func (r *articleUpdateRequest) bind(c echo.Context, a *model.Article) error {
+func (r *projectUpdateRequest) bind(c echo.Context, a *model.Project) error {
 	if err := c.Bind(r); err != nil {
 		return err
 	}
 	if err := c.Validate(r); err != nil {
 		return err
 	}
-	a.Title = r.Article.Title
+	a.Title = r.Project.Title
 	a.Slug = slug.Make(a.Title)
-	a.Description = r.Article.Description
-	a.Body = r.Article.Body
+	a.Description = r.Project.Description
+	a.Body = r.Project.Body
 	return nil
 }
 

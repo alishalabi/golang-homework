@@ -21,10 +21,10 @@ func (h *Handler) Register(v1 *echo.Group) {
 	profiles.POST("/:username/follow", h.Follow)
 	profiles.DELETE("/:username/follow", h.Unfollow)
 
-	articles := v1.Group("/articles", middleware.JWTWithConfig(
+	projects := v1.Group("/projects", middleware.JWTWithConfig(
 		middleware.JWTConfig{
 			Skipper: func(c echo.Context) bool {
-				if c.Request().Method == "GET" && c.Path() != "/api/articles/feed" {
+				if c.Request().Method == "GET" && c.Path() != "/api/projects/feed" {
 					return true
 				}
 				return false
@@ -32,17 +32,17 @@ func (h *Handler) Register(v1 *echo.Group) {
 			SigningKey: utils.JWTSecret,
 		},
 	))
-	articles.POST("", h.CreateArticle)
-	articles.GET("/feed", h.Feed)
-	articles.PUT("/:slug", h.UpdateArticle)
-	articles.DELETE("/:slug", h.DeleteArticle)
-	articles.POST("/:slug/comments", h.AddComment)
-	articles.DELETE("/:slug/comments/:id", h.DeleteComment)
-	articles.POST("/:slug/favorite", h.Favorite)
-	articles.DELETE("/:slug/favorite", h.Unfavorite)
-	articles.GET("", h.Articles)
-	articles.GET("/:slug", h.GetArticle)
-	articles.GET("/:slug/comments", h.GetComments)
+	projects.POST("", h.CreateProject)
+	projects.GET("/feed", h.Feed)
+	projects.PUT("/:slug", h.UpdateProject)
+	projects.DELETE("/:slug", h.DeleteProject)
+	projects.POST("/:slug/comments", h.AddComment)
+	projects.DELETE("/:slug/comments/:id", h.DeleteComment)
+	projects.POST("/:slug/favorite", h.Favorite)
+	projects.DELETE("/:slug/favorite", h.Unfavorite)
+	projects.GET("", h.Projects)
+	projects.GET("/:slug", h.GetProject)
+	projects.GET("/:slug/comments", h.GetComments)
 
 	tags := v1.Group("/tags")
 	tags.GET("", h.Tags)

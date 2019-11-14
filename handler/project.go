@@ -10,7 +10,7 @@ import (
 	"golang-starter-pack/utils"
 )
 
-func (h *Handler) GetArticle(c echo.Context) error {
+func (h *Handler) GetProject(c echo.Context) error {
 	slug := c.Param("slug")
 	a, err := h.projectStore.GetBySlug(slug)
 	if err != nil {
@@ -19,10 +19,10 @@ func (h *Handler) GetArticle(c echo.Context) error {
 	if a == nil {
 		return c.JSON(http.StatusNotFound, utils.NotFound())
 	}
-	return c.JSON(http.StatusOK, newArticleResponse(c, a))
+	return c.JSON(http.StatusOK, newProjectResponse(c, a))
 }
 
-func (h *Handler) Articles(c echo.Context) error {
+func (h *Handler) Projects(c echo.Context) error {
 	tag := c.QueryParam("tag")
 	author := c.QueryParam("author")
 	favoritedBy := c.QueryParam("favorited")
@@ -34,7 +34,7 @@ func (h *Handler) Articles(c echo.Context) error {
 	if err != nil {
 		limit = 20
 	}
-	var projects []model.Article
+	var projects []model.Project
 	var count int
 	if tag != "" {
 		projects, count, err = h.projectStore.ListByTag(tag, offset, limit)
@@ -57,11 +57,11 @@ func (h *Handler) Articles(c echo.Context) error {
 			return c.JSON(http.StatusInternalServerError, nil)
 		}
 	}
-	return c.JSON(http.StatusOK, newArticleListResponse(h.userStore, userIDFromToken(c), projects, count))
+	return c.JSON(http.StatusOK, newProjectListResponse(h.userStore, userIDFromToken(c), projects, count))
 }
 
 func (h *Handler) Feed(c echo.Context) error {
-	var projects []model.Article
+	var projects []model.Project
 	var count int
 	offset, err := strconv.Atoi(c.QueryParam("offset"))
 	if err != nil {
@@ -75,27 +75,27 @@ func (h *Handler) Feed(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, nil)
 	}
-	return c.JSON(http.StatusOK, newArticleListResponse(h.userStore, userIDFromToken(c), projects, count))
+	return c.JSON(http.StatusOK, newProjectListResponse(h.userStore, userIDFromToken(c), projects, count))
 }
 
-func (h *Handler) CreateArticle(c echo.Context) error {
-	var a model.Article
+func (h *Handler) CreateProject(c echo.Context) error {
+	var a model.Project
 	req := &projectCreateRequest{}
 	if err := req.bind(c, &a); err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, utils.NewError(err))
 	}
 	a.AuthorID = userIDFromToken(c)
-	err := h.projectStore.CreateArticle(&a)
+	err := h.projectStore.CreateProject(&a)
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, utils.NewError(err))
 	}
 
-	return c.JSON(http.StatusCreated, newArticleResponse(c, &a))
+	return c.JSON(http.StatusCreated, newProjectResponse(c, &a))
 }
 
-func (h *Handler) UpdateArticle(c echo.Context) error {
+func (h *Handler) UpdateProject(c echo.Context) error {
 	slug := c.Param("slug")
-	a, err := h.projectStore.GetUserArticleBySlug(userIDFromToken(c), slug)
+	a, err := h.projectStore.GetUserProjectBySlug(userIDFromToken(c), slug)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
@@ -107,22 +107,22 @@ func (h *Handler) UpdateArticle(c echo.Context) error {
 	if err := req.bind(c, a); err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, utils.NewError(err))
 	}
-	if err = h.projectStore.UpdateArticle(a, req.Article.Tags); err != nil {
+	if err = h.projectStore.UpdateProject(a, req.Project.Tags); err != nil {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
-	return c.JSON(http.StatusOK, newArticleResponse(c, a))
+	return c.JSON(http.StatusOK, newProjectResponse(c, a))
 }
 
-func (h *Handler) DeleteArticle(c echo.Context) error {
+func (h *Handler) DeleteProject(c echo.Context) error {
 	slug := c.Param("slug")
-	a, err := h.projectStore.GetUserArticleBySlug(userIDFromToken(c), slug)
+	a, err := h.projectStore.GetUserProjectBySlug(userIDFromToken(c), slug)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
 	if a == nil {
 		return c.JSON(http.StatusNotFound, utils.NotFound())
 	}
-	err = h.projectStore.DeleteArticle(a)
+	err = h.projectStore.DeleteProject(a)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
@@ -192,7 +192,7 @@ func (h *Handler) Favorite(c echo.Context) error {
 	if err := h.projectStore.AddFavorite(a, userIDFromToken(c)); err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, utils.NewError(err))
 	}
-	return c.JSON(http.StatusOK, newArticleResponse(c, a))
+	return c.JSON(http.StatusOK, newProjectResponse(c, a))
 }
 
 func (h *Handler) Unfavorite(c echo.Context) error {
@@ -207,7 +207,7 @@ func (h *Handler) Unfavorite(c echo.Context) error {
 	if err := h.projectStore.RemoveFavorite(a, userIDFromToken(c)); err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, utils.NewError(err))
 	}
-	return c.JSON(http.StatusOK, newArticleResponse(c, a))
+	return c.JSON(http.StatusOK, newProjectResponse(c, a))
 }
 
 func (h *Handler) Tags(c echo.Context) error {

@@ -19,13 +19,13 @@ Created to demonstrate a complete full-stack application built with **Golang, Ec
 
 ```bash
 ├── main.go
-├── article
-│   └── article.go
+├── project
+│   └── project.go
 ├── db
 │   └── db.go
 ├── handler
-│   ├── article.go
-│   ├── article_test.go
+│   ├── project.go
+│   ├── project_test.go
 │   ├── handler.go
 │   ├── handler_test.go
 │   ├── request.go
@@ -34,7 +34,7 @@ Created to demonstrate a complete full-stack application built with **Golang, Ec
 │   ├── user.go
 │   └── user_test.go
 ├── model
-│   ├── article.go
+│   ├── project.go
 │   └── user.go
 ├── router
 │   ├── middleware
@@ -42,7 +42,7 @@ Created to demonstrate a complete full-stack application built with **Golang, Ec
 │   ├── router.go
 │   └── validator.go
 ├── store
-│   ├── article.go
+│   ├── project.go
 │   └── user.go
 ├── user
 │   └── user.go
